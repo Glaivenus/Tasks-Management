@@ -1,0 +1,30 @@
+
+@media (max-width: 768px) {
+    .draggable {
+      /* 在小屏幕上，方框将堆叠而不是并排显示 */
+      top: auto !important;
+      left: 50% !important;
+      transform: translateX(-50%);
+      margin-top: 20px;
+    }
+  
+    #input-container {
+      top: 20px !important;
+    }
+  
+    #list-container {
+      top: 300px !important; /* 根据实际内容调整这个值以避免重叠 */
+    }
+  }
+  
+
+  #input-container {
+    top: 100px;
+    left: 10%; /* 或者根据你的布局需要调整 */
+  }
+  
+  #list-container {
+    top: 100px;
+    right: 10%; /* 或者根据你的布局需要调整 */
+  }
+  

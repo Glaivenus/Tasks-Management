@@ -4,7 +4,7 @@ body {
   padding: 0;
 }
 body {
-  background: #fff;
+  background: #1c1b58;
 }
 button {
   margin: 0;
@@ -25,7 +25,7 @@ button {
 body {
   font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
   line-height: 1.4em;
-  background: #f5f5f5;
+  background: #1c1b58;
   color: #4d4d4d;
   min-width: 230px;
   max-width: 550px;
@@ -44,11 +44,11 @@ body {
 }
 
 #app {
-  background: #fff;
+  /* background: #fff; */
   margin: 70px 0 40px 0;
   padding: 15px;
   position: relative;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1); */
 }
 #app .header input {
   border: 2px solid rgba(47, 77, 175, 0.8);
@@ -56,16 +56,16 @@ body {
 }
 #app .add {
   position: absolute;
-  right: 15px;
-  top: 15px;
-  height: 68px;
-  width: 140px;
+  right: 0;
+  bottom: -4vh;
+  height: 4vh;
+  width: 100%;
   text-align: center;
   background-color: rgba(47, 77, 175, 0.8);
   color: #fff;
   cursor: pointer;
   font-size: 18px;
-  border-radius: 0 10px 10px 0;
+  border-radius: 10px 10px 10px 10px;
 }
 
 #app input::-webkit-input-placeholder {
@@ -356,3 +356,32 @@ html .clear-completed:active {
     bottom: 10px;
   }
 }
+
+
+.draggable {
+  position: absolute;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  cursor: move;
+}
+
+.drag-handle {
+  height: 20px;
+  background-color: #ddd;
+  text-align: center;
+  line-height: 20px;
+  cursor: grab;
+}
+
+/* 确保输入框和列表容器的样式不会重叠 */
+#input-container {
+  position: relative;
+  left: 10px;
+  top: 100px;
+}
+
+#list-container {
+  right: 10px;
+  top: 100px;
+}
+

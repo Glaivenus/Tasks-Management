@@ -5,49 +5,45 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="./css/index.css" />
+<link rel="stylesheet" href="./css/media.css">
 <title>记事本</title>
 </head>
-<body>
-
+<body> 
 <!-- 主体区域 -->
 <section id="app">
   <!-- 输入框 -->
-  <header class="header">
-    <h1>记事本</h1>
-    <input v-model="todoName"  placeholder="Title" class="new-todo" />
-    
-    <input v-model="todoFrom"  placeholder="From" class="new-todo" style="width: 40%"/>
 
-    <input v-model="todoDes"  placeholder="Description" class="new-todo" >
-
-    <button @click="add" class="add">Add</button>
-  </header>
+  <div id="input-container" class="draggable">
+  <div class="drag-handle">Drag</div>
+    <header class="header">
+      <div class="drag-handle"></div> <!-- 拖动控件 -->
+      <input v-model="todoName" placeholder="Title" class="new-todo" />
+      <input v-model="todoFrom" placeholder="From" class="new-todo" style="width: 40%"/>
+      <input v-model="todoDes" placeholder="Description" class="new-todo" >
+      <button @click="add" class="add">Add</button>
+    </header>
+  </div>
   <!-- 列表区域 -->
-  <section class="main">
-    <ul class="todo-list">
-      <li class="todo" v-for="(item, index) in list" :key="item.id">
-        <div class="view">
-          <span class="index">{{ index + 1 }}.</span> <label><strong>{{ item.name }}</strong> <br> {{ item.taskf }} <br> {{ item.desc }}</label>
-          
-          
-          <button @click="del(item.id)" class="destroy"></button>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <!-- 统计和清空 → 如果没有任务了，底部隐藏掉 → v-show -->
-  <footer class="footer" v-show="list.length > 0">
-    <!-- 统计 -->
-    <span class="todo-count">Tasks:<strong> {{ list.length }} </strong></span>
-    <!-- 清空 -->
-    <button @click="clear" class="clear-completed">
-      Clear Tasks
-    </button>
-  </footer>
+  <div id="list-container" class="draggable">
+    <div class="drag-handle">Drag</div> <!-- 拖动手柄 -->
+    <section class="main">
+      <div class="drag-handle"></div> <!-- 拖动控件 -->
+      <ul class="todo-list">
+        <li class="todo" v-for="(item, index) in list" :key="item.id">
+          <div class="view">
+            <span class="index">{{ index + 1 }}.</span> <label><strong>{{ item.name }}</strong> <br> {{ item.taskf }} <br> {{ item.desc }}</label>
+            <button @click="del(item.id)" class="destroy"></button>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
 </section>
 
 <!-- 底部 -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.24.3/vuedraggable.umd.min.js"></script>
+
 <script>
   // 添加功能
   // 1. 通过 v-model 绑定 输入框 → 实时获取表单元素的内容
@@ -90,5 +86,7 @@
   })
 
 </script>
+
+<script src="./js/drag.js"></script>
 </body>
 </html>
