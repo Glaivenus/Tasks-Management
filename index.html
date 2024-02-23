@@ -20,24 +20,32 @@
       <input v-model="todoName" placeholder="Title" class="new-todo" />
       <input v-model="todoFrom" placeholder="From" class="new-todo" style="width: 40%"/>
       <input v-model="todoDes" placeholder="Description" class="new-todo" >
+      <select v-model="selectedListId">
+        <option disabled value="">请选择一个列表</option>
+        <option v-for="list in lists" :value="list.id">{{ list.title }}</option>
+      </select>
       <button @click="add" class="add">Add</button>
     </header>
   </div>
   <!-- 列表区域 -->
-  <div id="list-container" class="draggable">
-    <div class="drag-handle">Drag</div> <!-- 拖动手柄 -->
+  <div v-for="(list, index) in lists" :key="list.id" class="list-container draggable">
+    <div class="drag-handle">Drag</div>
     <section class="main">
-      <div class="drag-handle"></div> <!-- 拖动控件 -->
-      <ul class="todo-list">
-        <li class="todo" v-for="(item, index) in list" :key="item.id">
+      <h3 @dblclick="editListName(list)" v-if="!list.editing">{{ list.title }}</h3>
+      <input v-else v-model="list.title" @blur="list.editing=false" @keyup.enter="list.editing=false">
+      <draggable class="todo-list" v-model="list.tasks" group="tasks" @end="onEnd">
+        
+        <li class="todo" v-for="(item, index) in list.tasks" :key="item.id">
           <div class="view">
             <span class="index">{{ index + 1 }}.</span> <label><strong>{{ item.name }}</strong> <br> {{ item.taskf }} <br> {{ item.desc }}</label>
-            <button @click="del(item.id)" class="destroy"></button>
+            <button @click="del(item.id, list.id)" class="destroy"></button>
           </div>
         </li>
-      </ul>
+      </draggable>
     </section>
   </div>
+
+  
 </section>
 
 <!-- 底部 -->
@@ -51,37 +59,97 @@
   const app = new Vue({
     el: '#app',
     data: {
-      todoName: '',
-      list: [
-        { id: 1, name: 'Sample Task' , taskf:'From sample person', desc:'BlahBlah'},
-        // { id: 2, name: '跳绳200个' },
-        // { id: 3, name: '游泳100米' },
-      ]
-    },
-    methods: {
-      del (id) {
-        // console.log(id) => filter 保留所有不等于该 id 的项
-        this.list = this.list.filter(item => item.id !== id)
-      },
-      add () {
-        if (this.todoName.trim() === '') {
-          alert('请输入任务名称')
-          return
-        }
-        this.list.unshift({
-          id: +new Date(),
-          name: this.todoName,
-          taskf: ' From ' + this.todoFrom,
-          desc: '[[' + this.todoDes + ']]'
-        })
-        this.todoName = ''
-        this.todoDes = ''
-        this.todoFrom = ''
+  todoName: '',
+      todoFrom: '',
+      todoDes: '',
+      selectedListId: '',
+      lists: [
+        {
+          id: 1,
+          title: 'Doing',
+          tasks: [
+            { id: 1, name: 'Sample Task', taskf: 'From sample person', desc: 'BlahBlah' },
+            // ...
+          ]
+        },
+        {
+          id: 2,
+          title: 'Done',
+          tasks: [
+          { id: 1, name: 'Sample Task', taskf: 'From sample person', desc: 'BlahBlah' },
 
+            // ...
+          ]
+        },
+        // ...
+      ]
+},
+
+    methods: {
+      del(taskId, listId) {
+        const list = this.lists.find(l => l.id === listId);
+        if (list) {
+          list.tasks = list.tasks.filter(task => task.id !== taskId);
+        }
       },
+
+      add() {
+        if (this.todoName.trim() === '') {
+          alert('请输入任务名称');
+          return;
+        }
+        const list = this.lists.find(l => l.id === this.selectedListId);
+        if (list) {
+          list.tasks.unshift({
+            id: +new Date(),
+            name: this.todoName,
+            taskf: 'From ' + this.todoFrom,
+            desc: this.todoDes,
+          });
+          this.todoName = '';
+          this.todoDes = '';
+          this.todoFrom = '';
+        } else {
+          alert('请选择一个列表');
+        }
+      },
+
+
       clear () {
         this.list = []
-      }
+      },
+
+
+      editListName(list) {
+      Vue.set(list, 'editing', true);
+      },
+
+      onEnd(event) {
+  // 假设你的列表元素和任务元素都有设置 `data-id`
+  const fromListId = event.from.getAttribute('data-list-id');
+  const toListId = event.to.getAttribute('data-list-id');
+  const movedItemId = event.item.getAttribute('data-id');
+
+  if (fromListId === toListId) {
+    // 如果在同一个列表内部移动，你可能不需要做任何事情，
+    // 因为 v-model 绑定的 list.tasks 已经是响应式的，Vue 会自动处理。
+    return;
+  }
+
+  // 找到原始和目标列表
+  const fromList = this.lists.find(list => list.id.toString() === fromListId);
+  const toList = this.lists.find(list => list.id.toString() === toListId);
+  const movedTask = fromList.tasks.find(task => task.id.toString() === movedItemId);
+
+  // 更新列表
+  if (fromList && toList && movedTask) {
+    fromList.tasks = fromList.tasks.filter(task => task.id.toString() !== movedItemId); // 从原始列表中移除
+    toList.tasks.splice(event.newIndex, 0, movedTask); // 添加到目标列表
+  }
+},
+
+
+
     }
   })
 
